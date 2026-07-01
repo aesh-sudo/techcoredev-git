@@ -1,0 +1,13 @@
+FROM eclipse-temurin:17-jdk-alpine AS build
+WORKDIR /app
+COPY App.java ./src/com/example/App.java
+
+RUN mkdir -p ./build/classes
+RUN javac -d ./build/classes ./src/com/example/App.java
+RUN jar cf ./build/app.jar -C ./build/classes .
+
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=build /app/build/app.jar ./app.jar
+
+ENTRYPOINT ["java", "-cp", "app.jar", "com.example.App"]
