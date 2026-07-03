@@ -1,0 +1,17 @@
+Файл «docker-compose.yml»:
+```
+services:
+  app:
+    build:
+      dockerfile: dockerfile
+      context: .
+    ports:
+      - '5000:5000'
+  db:
+    image: postgres:14-alpine
+    environment:
+      - 'POSTGRES_USER=devops'
+      - 'POSTGRES_PASSWORD=mysecret'
+    ports:
+      - '5432:5432'
+```
