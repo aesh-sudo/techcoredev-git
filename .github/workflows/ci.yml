@@ -14,9 +14,9 @@ jobs:
         working-directory: m07/t02-ci-workflow
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: setup
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
       - name: run
         run: |
           pip install -r requirements.txt
