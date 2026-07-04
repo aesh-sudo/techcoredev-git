@@ -1,0 +1,23 @@
+name: ci
+on:
+  pull_request:
+    branches:
+      - main
+    path:
+      - 'm07/t02-ci-workflow/**'
+      - '!m07/t02-ci-workflow/*.md'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: m07/t02-ci-workflow
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: setup
+        uses: actions/setup-python@v5
+      - name: run
+        run: |
+          pip install -r requirements.txt
+          pytest
