@@ -31,7 +31,7 @@ jobs:
       - name: run
         run: |
           pip install -r tests/requirements.txt
-          pytest tests/ --import-mode=importlib
+          PYTHONPATH=src pytest tests/
 
       - name: build and push
         uses: docker/build-push-action@v7
