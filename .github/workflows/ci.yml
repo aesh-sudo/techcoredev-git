@@ -32,6 +32,8 @@ jobs:
         run: |
           pip install -r tests/requirements.txt
           pytest tests/
+        env:
+          PYTHONPATH: ${{ github.workspace }}/m08/t04-docker-build-and-push
 
       - name: build and push
         uses: docker/build-push-action@v7
