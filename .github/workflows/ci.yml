@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: m08/t03-docker-build-and-push
+        working-directory: m08/t04-docker-build-and-push
     steps:
       - name: checkout
         uses: actions/checkout@v7
