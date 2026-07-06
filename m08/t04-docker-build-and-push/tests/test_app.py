@@ -19,15 +19,18 @@ def test_hello_world(client):
 def test_hello_world_content(client):
     """Тест: главная страница содержит правильный текст"""
     response = client.get('/')
-    assert b'Hello, World!!!' in response.data
-    assert b'Docker-контейнера' in response.data
+    # Декодируем байты в строку
+    data = response.data.decode('utf-8')
+    assert 'Hello, World!!!' in data
+    assert 'Docker-контейнера' in data
 
 
 def test_hello_world_html(client):
     """Тест: ответ содержит HTML-тег h1"""
     response = client.get('/')
-    assert b'<h1>' in response.data
-    assert b'</h1>' in response.data
+    data = response.data.decode('utf-8')
+    assert '<h1>' in data
+    assert '</h1>' in data
 
 
 def test_hello_world_is_string(client):
