@@ -4,8 +4,8 @@ on:
     branches:
       - main
     path:
-      - 'm08/t03-docker-build-and-push/**'
-      - '!m08/t03-docker-build-and-push/*.md'
+      - 'm08/t04-docker-build-and-push/**'
+      - '!m08/t04-docker-build-and-push/*.md'
 jobs:
   test:
     runs-on: ubuntu-latest
