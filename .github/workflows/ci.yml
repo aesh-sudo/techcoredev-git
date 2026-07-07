@@ -39,4 +39,4 @@ jobs:
           context: ./m08/t04-docker-build-and-push
           file: ./m08/t04-docker-build-and-push/docker/dockerfile
           push: true
-          tags: ghcr.io/aesh-sudo/m08-t03-docker-build-and-push:latest
+          tags: ghcr.io/aesh-sudo/m08-t04-docker-build-and-push:latest
