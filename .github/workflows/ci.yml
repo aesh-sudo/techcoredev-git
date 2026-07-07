@@ -36,7 +36,7 @@ jobs:
       - name: build and push
         uses: docker/build-push-action@v7
         with:
-          context: .
-          file: ./docker/dockerfile
+          context: ./m08/t04-docker-build-and-push
+          file: ./m08/t04-docker-build-and-push/docker/dockerfile
           push: true
           tags: ghcr.io/aesh-sudo/m08-t03-docker-build-and-push:latest
