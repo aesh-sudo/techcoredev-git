@@ -1,3 +1,5 @@
+Код файла воркфлоу «ci.yml»:
+```
 name: ci
 on:
   pull_request:
@@ -11,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: m08/t04-docker-build-and-push
+        working-directory: m08/t04-docker-build-and-push        1
     steps:
       - name: checkout
         uses: actions/checkout@v7
@@ -27,10 +29,10 @@ jobs:
           PYTHONPATH=src pytest tests/
 
   build-push:
-    needs: test
+    needs: test                                                 2
     run-on: ubuntu-latest
     steps:
-      - name: checkout
+      - name: checkout                                          3
         uses: actions/checkout@v7
 
       - name: login to GHCR
@@ -49,3 +51,11 @@ jobs:
           tags: |
             ghcr.io/aesh-sudo/m08-t04-docker-build-and-push:latest
             ghcr.io/aesh-sudo/m08-t04-docker-build-and-push:${{ github.sha }}
+```
+
+```1``` – ```defaults.run.working-directory``` только в ```test```, так как в этой директории находится каталог с тестами и, соответственно, зависимости тоже должны быть установлены в этой директории.<br>
+В ```build-push``` пути указаны явно в ```context``` и ```file```, поэтому ```working-directory``` не нужен.
+
+```2``` – если ```test``` завершился с ошибкой, то ```build-push``` не запустится (статус «skipped»). Если ```test``` отменен, то ```build-push``` тоже будет отменен.<br>
+
+```3``` – каждый джоб запускается на новой виртуальной машине, поэтому необходимо скопировать файлы проекта.
