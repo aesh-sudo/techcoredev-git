@@ -1,3 +1,7 @@
+```github.sha``` – хеш коммита в теге.
+
+Код файла воркфлоу «ci.yml»:
+```
 name: ci
 on:
   pull_request:
@@ -42,3 +46,8 @@ jobs:
           tags: |
             ghcr.io/aesh-sudo/m08-t04-docker-build-and-push:latest
             ghcr.io/aesh-sudo/m08-t04-docker-build-and-push:${{ github.sha }}
+```
+
+Рекомендуется использовать два тега одновременно:<br>
+```latest``` – всегда актуальная версия (для разработки).<br>
+```${{ github.sha }}``` – конкретная версия (для отката и аудита).
