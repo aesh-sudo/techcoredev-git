@@ -3,7 +3,7 @@ on:
   pull_request:
     branches:
       - main
-    path:
+    paths:
       - 'm08/t04-docker-build-and-push/**'
       - '!m08/t04-docker-build-and-push/*.md'
 jobs:
