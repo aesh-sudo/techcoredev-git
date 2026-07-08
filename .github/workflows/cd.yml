@@ -38,5 +38,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/aesh-sudo/m08-t04-docker-build-and-push:latest
-            ghcr.io/aesh-sudo/m08-t04-docker-build-and-push:${{ github.sha }}
+            ghcr.io/aesh-sudo/m08-t08-multi-arch-build:latest
+            ghcr.io/aesh-sudo/m08-t08-multi-arch-build:${{ github.sha }}
