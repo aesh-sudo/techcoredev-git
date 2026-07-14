@@ -16,7 +16,7 @@ spec:                                      4
     spec:                                 11
       containers:                         12
       - name: my-app                      13
-        image: my-app:k8s                 14
+        image: my-app_12:k8s              14
         imagePullPolicy: IfNotPresent     15
 ```
 
