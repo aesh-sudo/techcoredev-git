@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: my-app-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: my-app
@@ -14,5 +14,9 @@ spec:
     spec:
       containers:
       - name: my-app
-        image: my-app_12:k8s
-        imagePullPolicy: IfNotPresent
+        image: my-app_13:k8s
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - secretRef:
+            name: my-app-secret
