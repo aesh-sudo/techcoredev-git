@@ -1,0 +1,8 @@
+auth:
+  postgresPassword: "mysecret"
+  database: "devopsdb"
+  username: "devops"
+  password: "mysecret"
+primary:
+  persistence:
+    size: 1Gi
