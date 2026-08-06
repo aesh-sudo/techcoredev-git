@@ -34,3 +34,8 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends curl=8.21.0 \
   && rm -rf /var/lib/apt/lists/*
 ```
+
+Справочная информация по командам ```hadolint```:
+```bash
+hadolint --help
+```
