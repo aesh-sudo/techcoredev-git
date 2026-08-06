@@ -1,0 +1,4 @@
+FROM ubuntu:22.04
+RUN apt-get update && apt-cache policy curl \
+#  && apt-get install -y --no-install-recommends curl=8.21.0-alpine3.24 \
+  && rm -rf /var/lib/apt/lists/*
