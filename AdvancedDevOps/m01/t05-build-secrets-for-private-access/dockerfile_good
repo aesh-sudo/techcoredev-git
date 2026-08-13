@@ -1,0 +1,7 @@
+FROM alpine
+
+RUN --mount=type=secret,id=pip_token \
+    echo "Using token: $(cat /run/secrets/pip_token)" && \
+    echo "pip install from https://token:$(cat /run/secrets/pip_token)@pip.mycompany.com"
+
+CMD ["echo", "Hello from Alpine"]
