@@ -1,0 +1,4 @@
+FROM alpine
+ARG PIP_TOKEN=super-secret-token-12345
+RUN echo "Using token: $PIP_TOKEN" && echo "pip install from https://token:$PIP_TOKEN@pip.mycompany.com"
+CMD ["echo", "Hello from Alpine"]
