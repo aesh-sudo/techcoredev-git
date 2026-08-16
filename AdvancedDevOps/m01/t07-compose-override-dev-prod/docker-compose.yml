@@ -1,0 +1,10 @@
+services:
+  web:
+    # В проде мы НЕ собираем образ, мы скачиваем готовый из Registry
+    image: my-app:latest
+    ports:
+      - "8080:8080"
+    # Никаких volumes! Код уже внутри образа.
+    environment:
+      - ENV=production
+      - PYTHONUNBUFFERED=1
