@@ -1,0 +1,30 @@
+pipeline {
+    // Определяем, где запускать пайплайн
+    agent any
+    
+    // Описание пайплайна
+    stages {
+        // Этап 1: Установка зависимостей
+        stage('Install Dependencies') {
+            steps {
+                echo 'Installing Python dependencies...'
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        
+        // Этап 2: Запуск тестов
+        stage('Test') {
+            steps {
+                echo 'Running tests with pytest...'
+                sh 'pytest -v'
+            }
+        }
+        
+        // Этап 3: Финальное сообщение
+        stage('Done') {
+            steps {
+                echo 'All tests passed successfully!'
+            }
+        }
+    }
+}
