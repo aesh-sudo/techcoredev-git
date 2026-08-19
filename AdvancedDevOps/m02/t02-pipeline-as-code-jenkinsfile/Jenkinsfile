@@ -7,17 +7,21 @@ pipeline {
         // Этап 1: Установка зависимостей
         stage('Install Dependencies') {
             steps {
-                echo 'Installing Python dependencies...'
-                sh 'python3 -m venv venv'
-                sh './venv/bin/pip install -r requirements.txt'
+		dir('AdvancedDevOps/m02/t02-pipeline-as-code-jenkinsfile') {
+			echo 'Installing Python dependencies...'
+                	sh 'python3 -m venv venv'
+                	sh './venv/bin/pip install -r requirements.txt'
+		}
             }
         }
         
         // Этап 2: Запуск тестов
         stage('Test') {
             steps {
-                echo 'Running tests with pytest...'
-                sh './venv/bin/python -m pytest -v'
+		dir('AdvancedDevOps/m02/t02-pipeline-as-code-jenkinsfile') {
+			echo 'Running tests with pytest...'
+                	sh './venv/bin/python -m pytest -v'
+		}
             }
         }
         
