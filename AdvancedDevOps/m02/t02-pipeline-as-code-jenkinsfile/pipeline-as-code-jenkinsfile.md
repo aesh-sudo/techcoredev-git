@@ -7,13 +7,60 @@
 * Отсутствие версионирования.
 
 ```Pipeline as Code```:
-* Конфигурация в файле ```Jenkinsfile``` в «Git».
+* Конфигурация в файле «Jenkinsfile» в «Git».
 * Управление через код.
 * Полное версионирование.
 
 Синтаксисы:<br>
 Декларативный (```Declarative```) – строгий, структурированный. Подходит для описания стандартных процессов.<br>
 Скриптовый (```Scripted```) – свободный (```Groovy```). Подходит для описания сложных сценариев.
+
+В приложении используется ```Python```, а в образе ```jenkins/jenkins:lts``` он не установлен:
+```bash
+$ docker exec jenkins python3 --version
+OCI runtime exec failed: exec failed: unable to start container process: exec: "python3": executable file not found in $PATH
+$ docker exec jen-kins pip --version
+OCI runtime exec failed: exec failed: unable to start container process: exec: "pip": executable file not found in $PATH
+```
+
+Создадим «dockerfile» для образа «Jenkins» с «Python»:
+```
+FROM jenkins/jenkins:lts
+
+# Переключимся на root для установки пакетов
+USER root
+
+# Установим Python3, pip и venv
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3 \
+        python3-pip \
+        python3-venv \
+        python3-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Возвратимся к пользователю jenkins (безопасность)
+USER jenkins
+```
+
+Соберем образ:
+```bash
+docker build -t jenkins-python:lts .
+```
+
+Остановим и удалим контейнер с «Jenkins» и запустим контейнер с «Jenkins» на основе образа, который создали:
+```bash
+docker run -d -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home --name jenkins jenkins-python:lts
+```
+
+Проверим еще раз наличие «Python» в контейнере с «Jenkins»:
+```bash
+$ docker exec jenkins python3 --version
+Python 3.13.5
+$ docker exec jenkins python3 -m pip --version
+pip 25.1.1 from /usr/lib/python3/dist-packages/pip (python 3.13)
+```
 
 Создадим файл приложения – «app.py»:
 ```python
@@ -84,7 +131,7 @@ pipeline {
 ```
 
 ```pipeline``` - ключевое слово, обозначающее декларативный пайплайн.<br>
-```agent any``` — использовать любой доступный агент (```worker```). В примере это сам Jenkins-сервер.<br>
+```agent any``` - использовать любой доступный агент (```worker```). В примере это сам Jenkins-сервер.<br>
 ```stages``` - контейнер для всех этапов.<br>
 ```stage``` - логическая единица работы. Имя видно в «UI Jenkins».<br>
 ```steps``` - команды, выполняемые в этапе.
@@ -99,26 +146,6 @@ pipeline {
 Имя файла «Jenkins» должно начинаться с большой буквы и быть без расширения.
 
 Для работы «Pipeline Job» необходимо поместить созданные файлы в «GitHub».
-
-Установим «Python» в контейнер с «Jenkins». Для примера достаточно будет установить прямо в контейнер. Если «Python» нужен в контейнере постоянно, то необходимо создать свой образ с ```jenkins/jenkins:lts```, прописав установку «Python» в коде «dockerfile».
-
-Обновим список пакетов:
-```bash
-docker exec -u root jenkins apt-get update
-```
-
-Установим «Python3» и «pip»:
-```bash
-docker exec -u root jenkins apt-get install -y python3 python3-pip python3-venv
-```
-
-Проверим установку:
-```bash
-$ docker exec jenkins python3 --version
-Python 3.13.5
-$ docker exec jenkins python3 -m pip --version
-pip 25.1.1 from /usr/lib/python3/dist-packages/pip (python 3.13)
-```
 
 В «UI Jenkins» создадим конфигурацию с именем «m02-t02-pipeline» и типом ```Pipeline```.<br>
 Настройки:<br>
