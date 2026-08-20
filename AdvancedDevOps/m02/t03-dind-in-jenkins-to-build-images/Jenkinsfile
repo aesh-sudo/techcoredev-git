@@ -1,0 +1,13 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Docker Check') {
+            steps {
+                echo 'Checking Docker availability...'
+                sh 'docker --version'
+                sh 'docker ps'
+            }
+        }
+    }
+}
