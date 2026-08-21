@@ -9,5 +9,14 @@ pipeline {
                 sh 'docker ps'
             }
         }
+
+        stage('Build Image') {
+            steps {
+                dir('AdvancedDevOps/m02/t03-dind-in-jenkins-to-build-images') {
+                    echo 'Building Docker image...'
+                    sh 'docker build -t my-app-jenkins:${BUILD_NUMBER} .'
+                }
+            }
+        }
     }
 }
