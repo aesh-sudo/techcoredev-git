@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                dir('AdvancedDevOps/m02/t04-credentials-docker-push') {
+                dir('AdvancedDevOps/m02/t05-credentials-secure-push') {
                     echo 'Code is already checked out'
                 }
             }
@@ -17,7 +17,7 @@ pipeline {
         
         stage('Build Image') {
             steps {
-                dir('AdvancedDevOps/m02/t04-credentials-docker-push') {
+                dir('AdvancedDevOps/m02/t05-credentials-secure-push') {
                     echo "Building ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER}"
                     sh 'docker build -t ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} .'
                 }
