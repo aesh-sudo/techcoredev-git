@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
+        DOCKER_IMAGE_NAME = 'aeshell/my-app-jenkins'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                dir('AdvancedDevOps/m02/t04-credentials-docker-push') {
+                    echo 'Code is already checked out'
+                }
+            }
+        }
+        
+        stage('Build Image') {
+            steps {
+                dir('AdvancedDevOps/m02/t04-credentials-docker-push') {
+                    echo "Building ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER}"
+                    sh 'docker build -t ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} .'
+                }
+            }
+        }
+        
+        stage('Push to Docker Hub') {
+            steps {
+                echo "Pushing to Docker Hub..."
+                
+                withCredentials([usernamePassword(
+                    credentialsId: "${DOCKER_CREDENTIALS_ID}",
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASSWORD'
+                )]) {
+                    sh '''
+                        echo "Logging in as ${DOCKER_USER}..."
+                        echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USER}" --password-stdin
+                        docker push ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER}
+                        docker logout
+                    '''
+                }
+            }
+        }
+        
+        stage('Done') {
+            steps {
+                echo "Image ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} successfully pushed!"
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
