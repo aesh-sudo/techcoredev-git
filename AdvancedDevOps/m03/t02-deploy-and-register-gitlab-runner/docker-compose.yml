@@ -1,0 +1,12 @@
+services:
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner
+    restart: always
+    extra_hosts:
+      - "gitlab.aesh.com:host-gateway"
+    volumes:
+      - 'runner_config:/etc/gitlab-runner'
+
+volumes:
+  runner_config:
