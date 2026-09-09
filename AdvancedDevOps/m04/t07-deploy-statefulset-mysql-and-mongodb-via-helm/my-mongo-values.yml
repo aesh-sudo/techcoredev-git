@@ -1,0 +1,58 @@
+architecture: standalone
+
+image:
+  repository: docker.io/library/mongo
+  tag: "4.4"
+
+auth:
+  enabled: true
+  rootUser: root
+  rootPassword: "mysecret"
+  users:
+    - username: devops
+      password: mysecret
+      database: devopsdb
+      roles:
+        - role: readWrite
+          db: devopsdb
+
+persistence:
+  enabled: true
+  size: 1Gi
+
+# Переопределяем пробы: используем mongo (старый shell) вместо mongosh
+livenessProbe:
+  exec:
+    command:
+      - sh
+      - -ec
+      - |
+        mongo --quiet --eval "db.adminCommand('ping')" -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin
+  initialDelaySeconds: 30
+  periodSeconds: 20
+  timeoutSeconds: 10
+  failureThreshold: 6
+
+readinessProbe:
+  exec:
+    command:
+      - sh
+      - -ec
+      - |
+        mongo --quiet --eval "db.adminCommand('ping')" -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+startupProbe:
+  exec:
+    command:
+      - sh
+      - -ec
+      - |
+        mongo --quiet --eval "db.adminCommand('ping')" -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 30

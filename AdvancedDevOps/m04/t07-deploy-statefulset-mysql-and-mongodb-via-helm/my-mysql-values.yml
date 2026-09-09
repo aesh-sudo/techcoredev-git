@@ -1,0 +1,12 @@
+architecture: standalone
+
+auth:
+  rootPassword: "mysecret"
+  database: "devopsdb"
+  username: "devops"
+  password: "mysecret"
+
+standalone:
+  persistence:
+    enabled: true
+    size: 1Gi
