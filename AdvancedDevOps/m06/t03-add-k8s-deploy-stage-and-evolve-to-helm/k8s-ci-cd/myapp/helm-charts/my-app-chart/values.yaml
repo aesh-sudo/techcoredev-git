@@ -1,0 +1,8 @@
+replicaCount: 1
+
+image:
+  repository: my-app
+  tag: "latest"          # значение по умолчанию. В агенте переопределим через --set
+  pullPolicy: IfNotPresent
+
+containerPort: 8081
