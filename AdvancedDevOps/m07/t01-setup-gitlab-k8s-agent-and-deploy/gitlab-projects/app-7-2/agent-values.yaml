@@ -1,0 +1,17 @@
+config:
+  kasAddress: "wss://gitlab.aesh.com:8929/-/kubernetes-agent/"
+  token: "glagent-g0BuJ1es437aqyuPhnpgP286MQpwOjIH.01.0w1e67239"
+
+extraEnv:
+  - name: SSL_CERT_DIR
+    value: "/etc/custom-ca"
+
+extraVolumeMounts:
+  - name: gitlab-ca
+    mountPath: "/etc/custom-ca"
+    readOnly: true
+
+extraVolumes:
+  - name: gitlab-ca
+    secret:
+      secretName: gitlab-ca-cert
