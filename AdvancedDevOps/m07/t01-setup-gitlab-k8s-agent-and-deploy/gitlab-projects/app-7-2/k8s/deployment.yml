@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-7-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-7-2
+  template:
+    metadata:
+      labels:
+        app: app-7-2
+    spec:
+      containers:
+        - name: app-7-2
+          image: nginx:alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80

@@ -1,0 +1,25 @@
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
+  script:
+    # Декодируем Base64 строку обратно в валидный PEM-файл
+    - echo "$KAS_CA_CERT_B64" | base64 -d > /tmp/kas-ca.crt
+
+    # Переключаем контекст (это дает kubectl токен доступа)
+    - kubectl config use-context root/app-7-2:minikube-agent
+
+    # Проверяем ответ кластера
+    - kubectl cluster-info --certificate-authority=/tmp/kas-ca.crt
+
+    # Применяем манифест
+    - kubectl apply -f k8s/deployment.yml --certificate-authority=/tmp/kas-ca.crt
+
+    # Проверяем результат
+    - kubectl get pods -l app=app-7-2 --certificate-authority=/tmp/kas-ca.crt
+  environment:
+    name: production
+    kubernetes:
+      namespace: default

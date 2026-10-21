@@ -1,0 +1,36 @@
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: always
+    hostname: 'gitlab.aesh.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.aesh.com:8929'
+        gitlab_rails['gitlab_shell_ssh_port'] = 10022
+
+        # HTTPS настройки
+        nginx['ssl_certificate'] = "/etc/gitlab/ssl/gitlab.aesh.com.crt"
+        nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/gitlab.aesh.com.key"
+        
+        # Отключаем HTTP/2 (критично для WebSockets)
+        gitlab_rails['nginx']['http2_enabled'] = false
+        
+        # Настройка WORKHORSE И KAS
+        gitlab_workhorse['listen_network'] = "tcp"
+        gitlab_workhorse['listen_addr'] = "127.0.0.1:8181"
+        gitlab_kas['gitlab_address'] = 'http://127.0.0.1:8181'
+        gitlab_kas['external_url'] = 'wss://gitlab.aesh.com:8929/-/kubernetes-agent/'
+    ports:
+      - '8929:8929'
+      - '10022:22'
+    volumes:
+      - 'gitlab_config:/etc/gitlab'
+      - 'gitlab_logs:/var/log/gitlab'
+      - 'gitlab_data:/var/opt/gitlab'
+      - '~/gitlab-ssl:/etc/gitlab/ssl'
+    shm_size: '256m'
+volumes:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:
