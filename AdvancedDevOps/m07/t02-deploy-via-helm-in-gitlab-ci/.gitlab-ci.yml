@@ -1,0 +1,21 @@
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: dtzar/helm-kubectl:latest
+  script:
+    # Декодируем Base64 строку обратно в валидный PEM-файл
+    - echo "$KAS_CA_CERT_B64" | base64 -d > /tmp/kas-ca.crt
+
+    # Переключаем контекст kubectl на нового агента
+    - kubectl config use-context root/app-7-3:app-7-3-agent
+
+    # Деплой через Helm
+    # --install: установит релиз, если его еще нет в кластере
+    # --upgrade: обновит релиз, если он уже существует
+    # --kube-context: явно указываем Helm, какой контекст использовать
+    - helm upgrade --install my-nginx-release ./my-helm-chart --kube-context root/app-7-3:app-7-3-agent --kube-ca-file=/tmp/kas-ca.crt
+
+    # Проверяем, что поды успешно создались
+    - kubectl get pods --certificate-authority=/tmp/kas-ca.crt
