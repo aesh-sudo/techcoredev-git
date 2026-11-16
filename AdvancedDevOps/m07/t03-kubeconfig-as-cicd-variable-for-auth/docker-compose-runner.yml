@@ -1,0 +1,23 @@
+services:
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner
+    restart: always
+    extra_hosts:
+      - "gitlab.aesh.com:host-gateway"
+    volumes:
+      - 'runner_config:/etc/gitlab-runner'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '/home/aesh/gitlab-ssl/gitlab.aesh.com.crt:/etc/gitlab-runner/certs/gitlab.aesh.com.crt:ro'
+    networks:
+      - gitlab-install_default
+
+volumes:
+  runner_config:
+
+# Объявляем сеть как внешнюю, чтобы Docker Compose не пытался создать ее заново,
+# а использовал уже существующую в системе
+networks:
+  gitlab-install_default:
+    external: true
+
