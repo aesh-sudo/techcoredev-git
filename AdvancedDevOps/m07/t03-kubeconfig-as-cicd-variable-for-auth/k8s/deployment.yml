@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-direct
+  labels:
+    app: nginx-direct
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-direct
+  template:
+    metadata:
+      labels:
+        app: nginx-direct
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80

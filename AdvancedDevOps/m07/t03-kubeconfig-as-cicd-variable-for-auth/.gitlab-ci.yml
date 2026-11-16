@@ -1,0 +1,26 @@
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: alpine/k8s:1.35.9
+  script:
+    # Декодируем Base64-строку обратно в kubeconfig-файл
+    - echo "$KUBE_CONFIG" | base64 -d > /tmp/kubeconfig.yml
+
+    # Проверяем, что файл создался и валидный
+    - head -n 10 /tmp/kubeconfig.yml
+
+    # Используем kubeconfig для получения информации о кластере
+    - kubectl --kubeconfig /tmp/kubeconfig.yml cluster-info
+
+    # Получаем список Подов в namespace default
+    - kubectl --kubeconfig /tmp/kubeconfig.yml get pods -n default
+
+    # Применяем манифест
+    - kubectl --kubeconfig /tmp/kubeconfig.yml apply -f k8s/deployment.yml
+  environment:
+    name: production
+    kubernetes:
+      namespace: default
+
